@@ -1,188 +1,155 @@
-<<<<<<< HEAD
-let cells = document.querySelectorAll(".cell");
-let restartGameButton = document.querySelector(".restart-btn");
+function GameBoard(){
+  const size = 3;
+  const board = [];
 
-let board = ["", "", "", "", "", "", "", "", ""];
-let currentPlayer = "X";
-let gameActive = true;
-=======
-function Gameboard(){
-    const board = [];
-
-    for(let i = 0;i < 3; i++){
-        board[i]=[];
-        for(let j = 0; j < 3; j++){
-            board[i].push(Cell());
-        }
-    }
->>>>>>> parent of 12273ea (Created basic logic/ trying to get winner logic to work in console first)
-
-let winningConditions = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
-
-<<<<<<< HEAD
-cells.forEach((cell) => {
-  cell.addEventListener("click", cellClick);
-});
-
-restartGameButton.addEventListener("click", restartGame);
-
-console.log("Game board created");
-
-function cellClick(event) {
-  const cell = event.target;
-  const index = cell.getAttribute("data-index");
-  console.log(`Cell clicked: ${index}`);
-
-  if (board[index] !== "" || !gameActive) {
-    return;
-  }
-
-  board[index] = currentPlayer;
-  cell.textContent = currentPlayer;
-
-  checkResult();
-}
-
-function checkResult() {
-  let roundWon = false;
-  for (let i = 0; i < winningConditions.length; i++) {
-    const condition = winningConditions[i];
-    const a = board[condition[0]];
-    const b = board[condition[1]];
-    const c = board[condition[2]];
-
-    if (a === "" || b === "" || c === "") {
-      continue;
-    }
-    if (a === b && b === c) {
-      roundWon = true;
-      break;
+  for(let i = 0; i < size; i++){
+    board[i] = [];
+    for(let j = 0; j < size; j++){
+      board[i].push(Cell());
     }
   }
-=======
-    const printBoard = () => {
-        const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()));
-        console.log(boardWithCellValues);
+
+  const getBoard = () => board;
+
+  const printBoard = () => console.log(board);
+
+  const selectCell = (row, column, mark) => {
+    console.log("Selected row: " + row + " column: " + column);
+    if(board[row][column] !== ""){
+      console.log("Cell is already taken");
+      return;
     }
 
-    const chooseCell = (row, column, player) => {
+    board[row][column].addMark(mark);
+  }
 
-        console.log("Selected row: " + row + " column: " + column);
-        board[row][column] = player;
-    }
-
-    return { getBoard, chooseCell, printBoard };
+  return {getBoard, printBoard, selectCell};
 }
 
 function Cell() {
-    let value = 0;
+  let mark = "";
 
-    const addToken = (player) => {
-        value = player;
-    };
->>>>>>> parent of 12273ea (Created basic logic/ trying to get winner logic to work in console first)
-
-  if (roundWon) {
-    gameActive = false;
-    document.querySelector(
-      ".player-turn"
-    ).textContent = `Player ${currentPlayer} wins!`;
-    return;
+  const addMark = (playerMark) => {
+    mark = playerMark;
   }
 
-<<<<<<< HEAD
-  if (!board.includes("")) {
-    gameActive = false;
-    document.querySelector(".player-turn").textContent = "It's a draw!";
-    return;
+  const getMark = () => mark;
+
+  return {addMark, getMark};
+}
+
+function GameLogic(
+  playerOneName = "Player 1",
+  playerTwoName = "Player 2"
+){
+  const board = new GameBoard();
+  let gameOver = false;
+
+  const getGameOver = () => gameOver;
+
+  const player = [
+    {
+      name: playerOneName,
+      mark: "O"
+    },
+    {
+      name: playerTwoName,
+      mark: "X"
+    }
+  ];
+
+  let activePlayer = player[0];
+
+  const switchPlayer = () => {
+    activePlayer = activePlayer === player[0] ? player[1] : player[0];
   }
 
-  currentPlayer = currentPlayer === "X" ? "O" : "X";
-  document.querySelector(
-    ".player-turn"
-  ).textContent = `Player ${currentPlayer}'s turn`;
-}
+  const getActivePlayer = () => activePlayer;
+  
+  const printNewRound = () => {
+    board.printBoard();
+    console.log(`${getActivePlayer()}'s turn`);
+  }
 
-function restartGame() {
-  board = ["", "", "", "", "", "", "", "", ""];
-  currentPlayer = "X";
-  gameActive = true;
+  const playRound = (row, column) => {
+    console.log(`${getActivePlayer().name} placed a token on row ${row} and column ${column}`);
+    console.log(getActivePlayer().mark);
+    board.selectCell(row, column, ""+getActivePlayer().mark);
 
-  cells.forEach((cell) => {
-    cell.textContent = "";
-  });
+    if(
+      board.getBoard()[0][0].getMark() !== "" && board.getBoard()[0][1].getMark() !== "" && board.getBoard()[0][2].getMark() !== "" &&
+      board.getBoard()[0][0].getMark() === board.getBoard()[0][1].getMark() === board.getBoard()[0][2].getMark()
+    ) {
+      console.log(`${getActivePlayer()} won!`);
+      gameOver = true;
+    } else if(
+      board.getBoard()[1][0].getMark() !== "" && board.getBoard()[1][1].getMark() !== "" && board.getBoard()[1][2].getMark() !== "" &&
+      board.getBoard()[1][0].getMark() == board.getBoard()[1][1].getMark() == board.getBoard()[1][2].getMark()
+    ) {
+      console.log(`${getActivePlayer()} won!`);
+      gameOver = true;
+    } else if(
+      board.getBoard()[2][0].getMark() !== "" && board.getBoard()[2][1].getMark() !== "" && board.getBoard()[2][2].getMark() !== "" &&
+      board.getBoard()[2][0].getMark() == board.getBoard()[2][1].getMark() == board.getBoard()[2][2].getMark()
+    ) {
+      console.log(`${getActivePlayer()} won!`);
+      gameOver = true;
+    }
 
-  document.querySelector(".player-turn").textContent = "Player X's turn";
-}
-=======
-    return {addToken, getValue};
-}
+    if(
+      board.getBoard()[0][0].getMark() !== "" && board.getBoard()[1][0].getMark() !== "" && board.getBoard()[2][0].getMark() !== "" &&
+      board.getBoard()[0][0].getMark() == board.getBoard()[1][0].getMark() == board.getBoard()[2][0].getMark()
+    ) {
+      console.log(`${getActivePlayer()} won!`);
+      gameOver = true;
+    } else if(
+      board.getBoard()[0][1].getMark() !== "" && board.getBoard()[1][1].getMark() !== "" && board.getBoard()[2][1].getMark() !== "" &&
+      board.getBoard()[0][1].getMark() == board.getBoard()[1][1].getMark() == board.getBoard()[2][1].getMark()   
+    ) {
+      console.log(`${getActivePlayer()} won!`);
+      gameOver = true;
+    } else if(
+      board.getBoard()[0][2].getMark() !== "" && board.getBoard()[1][2].getMark() !== "" && board.getBoard()[2][2].getMark() !== "" &&
+      board.getBoard()[0][2].getMark() == board.getBoard()[1][2].getMark() == board.getBoard()[2][2].getMark()
+    ) {
+      console.log(`${getActivePlayer()} won!`);
+      gameOver = true;
+    }
 
-function GameController(
-    playerOneName = "Player One", playerTwoName = "Player Two"
-) {
-    const board = Gameboard();
-    const players = [
-        {
-            name: playerOneName,
-            token: 1
-        },
-        {
-            name: playerTwoName,
-            token: 2
-        }
-    ];
+    if(
+      board.getBoard()[0][0].getMark() !== "" && board.getBoard()[1][1].getMark() !== "" && board.getBoard()[2][2].getMark() !== "" &&
+      board.getBoard()[0][1].getMark() == board.getBoard()[1][1].getMark() == board.getBoard()[2][2].getMark()
+    ) {
+      console.log(`${getActivePlayer()} won!`);
+      gameOver = true;
+    } else if(
+      board.getBoard()[0][2].getMark() !== "" && board.getBoard()[1][1].getMark() !== "" && board.getBoard()[2][0].getMark() !== "" &&
+      board.getBoard()[0][2].getMark() == board.getBoard()[1][1].getMark() == board.getBoard()[2][0].getMark()
+    ) {
+      console.log(`${getActivePlayer()} won!`);
+      gameOver = true;
+    }
 
-    let activePlayer = players[0];
+    if(board.getBoard().flat().every(element => element.getMark() !== "")){
+      console.log("It's a tie!");
+      gameOver = true;
+    }
 
-    const switchPlayerTurn = () => {
-        activePlayer = acticePlayer === players[0] ? players[1] : players[0];
-    };
-
-    const getActivePlayer = () => activePlayer;
-
-    const printNewRound = () => {
-        board.printBoard();
-        console.log("${getActivePlayer().name}'s turn.");
-    };
-
-    const playRound = (row, column) => {
-        console.log("Placing ${getActivePlayer().name}'s token into row ${row} and column ${column}...");
-        board.chooseCell(row, column, getActivePlayer().token);
-
-        /*Check win condition*/
-        /*Check rows*/
-
-        /*Check columns*/
-
-        /*Check diagonal*/
-        if(board.getBoard()[0][0] == board.getBoard()[1][1] &&
-            board.getBoard()[1][1] == board.getBoard()[2][2] &&
-            board.getBoard()[0][0] == board.getBoard()[2][2]
-        ) {
-            console.log("WIN");
-        }
-
-        switchPlayerTurn();
-        printNewRound();
-    };
-
+    switchPlayer();
     printNewRound();
+  }
 
-    return {
-        playRound,
-        getActivePlayer
-    };
+  printNewRound();
+
+  return{getActivePlayer, playRound, getGameOver};
 }
 
-const game = GameController();
->>>>>>> parent of 12273ea (Created basic logic/ trying to get winner logic to work in console first)
+const game = GameLogic();
+
+game.playRound(1,1);
+game.playRound(0,0);
+game.playRound(2,1);
+game.playRound(1,0);
+game.playRound(0,1);
+console.log(game.getGameOver());
+

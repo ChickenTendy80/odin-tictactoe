@@ -15,7 +15,7 @@ function GameBoard(){
 
   const selectCell = (row, column, mark) => {
     console.log("Selected row: " + row + " column: " + column);
-    if(board[row][column] !== ""){
+    if(board[row][column].getMark() !== ""){
       console.log("Cell is already taken");
       return;
     }
@@ -30,6 +30,7 @@ function Cell() {
   let mark = "";
 
   const addMark = (playerMark) => {
+    console.log(playerMark + ": adding mark");
     mark = playerMark;
   }
 
@@ -68,12 +69,11 @@ function GameLogic(
   
   const printNewRound = () => {
     board.printBoard();
-    console.log(`${getActivePlayer()}'s turn`);
+    console.log(`${getActivePlayer().name}'s turn`);
   }
 
   const playRound = (row, column) => {
     console.log(`${getActivePlayer().name} placed a token on row ${row} and column ${column}`);
-    console.log(getActivePlayer().mark);
     board.selectCell(row, column, ""+getActivePlayer().mark);
 
     if(
@@ -153,3 +153,30 @@ game.playRound(1,0);
 game.playRound(0,1);
 console.log(game.getGameOver());
 
+//UI
+const ScreenController = (function() {
+  const gameCells = document.querySelectorAll(".cell");
+  const resetButton = document.querySelector(".restart-btn");
+  const playerTurn = document.querySelector(".player-turn");
+
+  const cellClick = (event) => {
+    const cell = event.target;
+    const rowIndex = cell.getAttribute("data-row");
+    const columnIndex = cell.getAttribute("data-column");
+    console.log(`Cell clicked at row: ${rowIndex} and column: ${columnIndex}`);
+  }
+
+  const restartGame = () => {
+    const board = new GameBoard();
+  }
+
+  gameCells.forEach((cell) => {
+    cell.addEventListener("click", cellClick);
+  });
+
+  resetButton.addEventListener("click", restartGame);
+
+
+  return {};
+
+})();

@@ -66,6 +66,8 @@ function GameLogic(
   }
 
   const getActivePlayer = () => activePlayer;
+
+  const getActiveMark = () => activePlayer.mark;
   
   const printNewRound = () => {
     board.printBoard();
@@ -141,20 +143,20 @@ function GameLogic(
 
   printNewRound();
 
-  return{getActivePlayer, playRound, getGameOver};
+  return{getActivePlayer, getActiveMark, playRound, getGameOver};
 }
-
-const game = GameLogic();
-
-game.playRound(1,1);
-game.playRound(0,0);
-game.playRound(2,1);
-game.playRound(1,0);
-game.playRound(0,1);
-console.log(game.getGameOver());
 
 //UI
 const ScreenController = (function() {
+  const game = GameLogic();
+
+  game.playRound(1,1);
+  game.playRound(0,0);
+  game.playRound(2,1);
+  game.playRound(1,0);
+  game.playRound(0,1);
+  console.log(game.getGameOver());
+
   const gameCells = document.querySelectorAll(".cell");
   const resetButton = document.querySelector(".restart-btn");
   const playerTurn = document.querySelector(".player-turn");
@@ -164,6 +166,13 @@ const ScreenController = (function() {
     const rowIndex = cell.getAttribute("data-row");
     const columnIndex = cell.getAttribute("data-column");
     console.log(`Cell clicked at row: ${rowIndex} and column: ${columnIndex}`);
+    cell.textContent = game.getActiveMark();
+    game.playRound(rowIndex, columnIndex);
+
+    if(game.getGameOver()){
+      console.log("END");
+    }
+
   }
 
   const restartGame = () => {

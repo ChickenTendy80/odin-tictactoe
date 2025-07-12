@@ -1,184 +1,89 @@
-//Gameboard
-function GameBoard() {
-    const size = 3;
-    const board = [];
+let cells = document.querySelectorAll(".cell");
+let restartGameButton = document.querySelector(".restart-btn");
 
-    for(let i = 0; i < size; i++){
-        board[i] = [];
-        for(let j = 0; j < size; j++){
-            board[i].push(Cell());
-        }
-    }
+let board = ["", "", "", "", "", "", "", "", ""];
+let currentPlayer = "X";
+let gameActive = true;
 
-    const getBoard = () => board;
+let winningConditions = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
 
-    const selectCell = (row, column, player) => {
-        /*
-        if(board[row][column] != 0){
-            console.log("Cell is already taken");
-            return;
-        }
-        */
-        board[row][column].addMark(player);
-    }
+cells.forEach((cell) => {
+  cell.addEventListener("click", cellClick);
+});
 
-    const printBoard = () => { 
-        const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()));
-        console.log(boardWithCellValues); 
-    }
+restartGameButton.addEventListener("click", restartGame);
 
-    return {getBoard, selectCell, printBoard};
+console.log("Game board created");
+
+function cellClick(event) {
+  const cell = event.target;
+  const index = cell.getAttribute("data-index");
+  console.log(`Cell clicked: ${index}`);
+
+  if (board[index] !== "" || !gameActive) {
+    return;
+  }
+
+  board[index] = currentPlayer;
+  cell.textContent = currentPlayer;
+
+  checkResult();
 }
 
+function checkResult() {
+  let roundWon = false;
+  for (let i = 0; i < winningConditions.length; i++) {
+    const condition = winningConditions[i];
+    const a = board[condition[0]];
+    const b = board[condition[1]];
+    const c = board[condition[2]];
 
-
-//Cell informaitons
-// 0 is no token
-// 1 for player 1
-// 2 for player 2
-function Cell(){
-    let value = 0;
-    let mark = "";
-
-    const addMark = (player) => {
-        value = player.token;
-        mark = player.mark;
+    if (a === "" || b === "" || c === "") {
+      continue;
     }
+    if (a === b && b === c) {
+      roundWon = true;
+      break;
+    }
+  }
 
-    const getValue = () => value;
+  if (roundWon) {
+    gameActive = false;
+    document.querySelector(
+      ".player-turn"
+    ).textContent = `Player ${currentPlayer} wins!`;
+    return;
+  }
 
-    const getMark = () => mark;
+  if (!board.includes("")) {
+    gameActive = false;
+    document.querySelector(".player-turn").textContent = "It's a draw!";
+    return;
+  }
 
-    return {addMark, getValue, getMark};
+  currentPlayer = currentPlayer === "X" ? "O" : "X";
+  document.querySelector(
+    ".player-turn"
+  ).textContent = `Player ${currentPlayer}'s turn`;
 }
 
-//Game Controller/Logic
-function GameLogic(
-    playerOneName = "Player One",
-    playerTwoName = "Player Two"
-) {
-    const board = new GameBoard();
-    let gameOver = false;
+function restartGame() {
+  board = ["", "", "", "", "", "", "", "", ""];
+  currentPlayer = "X";
+  gameActive = true;
 
-    const getGameOver = () => gameOver;
+  cells.forEach((cell) => {
+    cell.textContent = "";
+  });
 
-    const players = [
-        {
-            name: playerOneName,
-            token: 1,
-            mark: "O"
-        },
-        {
-            name: playerTwoName,
-            token: 2,
-            mark: "X"
-        }
-    ];
-
-    let activePlayer = players[0];
-
-    const switchPlayerTurn = () => {
-        activePlayer = activePlayer === players[0] ? players[1] : players[0];
-    };
-
-    const getActivePlayer = () => activePlayer;
-
-    const printNewRound = () => {
-        board.printBoard();
-        console.log(`${getActivePlayer().name}'s turn.`);
-    };
-
-    const playRound = (row, column) => {
-        console.log(`${getActivePlayer().name} placed a token on row ${row} and column ${column}`);
-        board.selectCell(row, column, getActivePlayer());
-
-        //Check winner
-        //Rows
-        if(
-            board.getBoard()[0][0].getMark() != 0 &&
-            board.getBoard()[0][0].getValue() == board.getBoard()[0][1].getValue() == board.getBoard()[0][0].getValue()
-        ){
-            console.log(`${getActivePlayer().name} won!`);
-            gameOver = true;
-        } else if(
-            board.getBoard()[1][0].getMark() != 0 &&
-            board.getBoard()[1][0].getValue() == board.getBoard()[1][1].getValue() == board.getBoard()[1][2].getValue()
-        ){
-            console.log(`${getActivePlayer().name} won!`);
-            gameOver = true;
-        } else if(
-            board.getBoard()[2][0].getMark() != 0 &&
-            board.getBoard()[2][0].getValue() == board.getBoard()[2][1].getValue() == board.getBoard()[2][2].getValue()
-        ){
-            console.log(`${getActivePlayer().name} won!`);
-            gameOver = true;
-        }
-
-        //Columns
-        if(
-            board.getBoard()[0][0].getMark() != 0 &&
-            board.getBoard()[0][0].getValue() == board.getBoard()[1][0].getValue() == board.getBoard()[2][0].getValue()
-        ){
-            console.log(`${getActivePlayer().name} won!`);
-            gameOver = true;
-        } else if(
-            board.getBoard()[0][1].getMark() != 0 &&
-            board.getBoard()[0][1].getValue() == board.getBoard()[1][1].getValue() == board.getBoard()[2][1].getValue()
-        ){
-            console.log(`${getActivePlayer().name} won!`);
-            gameOver = true;
-        } else if(
-            board.getBoard()[0][2].getMark() != 0 &&
-            board.getBoard()[0][2].getValue() == board.getBoard()[1][2].getValue() == board.getBoard()[2][2].getValue()
-        ){
-            console.log(`${getActivePlayer().name} won!`);
-            gameOver = true;
-        }
-
-        //Diagonal
-        if(
-            board.getBoard()[0][0].getMark() != 0 &&
-            board.getBoard()[0][0].getValue() == board.getBoard()[1][1].getValue() == board.getBoard()[2][2].getValue()
-        ){
-            console.log(`${getActivePlayer().name} won!`);
-            gameOver = true;
-        } else if(
-            board.getBoard()[0][2].getMark() != 0 &&
-            board.getBoard()[0][2].getValue() == board.getBoard()[1][1].getValue() == board.getBoard()[2][0].getValue()
-        ){
-            console.log(`${getActivePlayer().name} won!`);
-            gameOver = true;
-        }
-
-        switchPlayerTurn();
-        printNewRound();
-    }
-
-    //Initial Play Round
-    printNewRound();
-
-    return{playRound, getActivePlayer, getGameOver};
+  document.querySelector(".player-turn").textContent = "Player X's turn";
 }
-
-const game = GameLogic();
-
-//player action test
-
-//player 1
-game.playRound(1,1);
-
-//player 2
-game.playRound(0,0);
-
-//player 1
-game.playRound(2,1);
-
-//player 2
-game.playRound(1,0);
-
-//player 1
-game.playRound(0,1);
-
-console.log(game.getGameOver());
-
-//UI

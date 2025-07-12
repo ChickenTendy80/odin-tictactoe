@@ -1,0 +1,23 @@
+*{
+    box-sizing: border-box;
+    margin: 0px;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.cell{
+    min-width: 100px;
+    min-height: 100px;
+    border:1px solid black;
+}
+
+.board{
+    display:flex;
+    flex-wrap: wrap;
+    max-width: 340px;
+    gap: 8px;
+}

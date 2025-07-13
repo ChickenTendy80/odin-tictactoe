@@ -97,24 +97,30 @@ function GameLogic(
   const playRound = (row, column) => {
     console.log(`${getActivePlayer().name} placed a ${getActiveMark()} on row ${row} and column ${column}`);
     console.log(getActiveMark());
-    board.selectCell(row, column, getActivePlayer().mark);
+    board.selectCell(row, column, getActiveMark());
 
     if(
-      getActivePlayer().mark === board.getBoard()[0][0].getMark() === board.getBoard()[0][1].getMark() === board.getBoard()[0][2].getMark()
+      getActiveMark() === board.getBoard()[0][0].getMark() &&
+      board.getBoard()[0][0].getMark() === board.getBoard()[0][1].getMark() &&
+      board.getBoard()[0][1].getMark() === board.getBoard()[0][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
       console.log("row 1");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
-      getActivePlayer().mark === board.getBoard()[1][0].getMark() === board.getBoard()[1][1].getMark() === board.getBoard()[1][2].getMark()
+      getActivePlayer().mark === board.getBoard()[1][0].getMark() &&
+      board.getBoard()[1][0].getMark() === board.getBoard()[1][1].getMark() &&
+      board.getBoard()[1][1].getMark() === board.getBoard()[1][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
       console.log("row 2");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
-      getActivePlayer().mark === board.getBoard()[2][0].getMark() === board.getBoard()[2][1].getMark() === board.getBoard()[2][2].getMark()
+      getActivePlayer().mark === board.getBoard()[2][0].getMark() &&
+      board.getBoard()[2][0].getMark() === board.getBoard()[2][1].getMark() &&
+      board.getBoard()[2][1].getMark() === board.getBoard()[2][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
       console.log("row 3");
@@ -123,21 +129,27 @@ function GameLogic(
     }
 
     if(
-      getActivePlayer().mark === board.getBoard()[0][0].getMark() === board.getBoard()[1][0].getMark() === board.getBoard()[2][0].getMark()
+      getActivePlayer().mark === board.getBoard()[0][0].getMark() &&
+      board.getBoard()[0][0].getMark() === board.getBoard()[1][0].getMark() &&
+      board.getBoard()[1][0].getMark() === board.getBoard()[2][0].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
       console.log("column 1");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
-      getActivePlayer().mark === board.getBoard()[0][1].getMark() === board.getBoard()[1][1].getMark() === board.getBoard()[2][1].getMark()   
+      getActivePlayer().mark === board.getBoard()[0][1].getMark() &&
+      board.getBoard()[0][1].getMark() === board.getBoard()[1][1].getMark() &&
+      board.getBoard()[1][1].getMark() === board.getBoard()[2][1].getMark()   
     ) {
       console.log(`${getActivePlayer().name} won!`);
       console.log("column 2");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
-      getActivePlayer().mark === board.getBoard()[0][2].getMark() === board.getBoard()[1][2].getMark() === board.getBoard()[2][2].getMark()
+      getActivePlayer().mark === board.getBoard()[0][2].getMark() &&
+      board.getBoard()[0][2].getMark() === board.getBoard()[1][2].getMark() &&
+      board.getBoard()[1][2].getMark() === board.getBoard()[2][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
       console.log("column 3");
@@ -146,17 +158,21 @@ function GameLogic(
     }
 
     if(
-      getActivePlayer().mark === board.getBoard()[0][1].getMark() === board.getBoard()[1][1].getMark() === board.getBoard()[2][2].getMark()
+      getActivePlayer().mark === board.getBoard()[0][0].getMark() &&
+      board.getBoard()[0][0].getMark() === board.getBoard()[1][1].getMark() &&
+      board.getBoard()[1][1].getMark() === board.getBoard()[2][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
       console.log("diagonal 1");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
-      getActivePlayer().mark === board.getBoard()[0][2].getMark() == board.getBoard()[1][1].getMark() === board.getBoard()[2][0].getMark()
+      getActivePlayer().mark === board.getBoard()[0][2].getMark() &&
+      board.getBoard()[0][2].getMark() == board.getBoard()[1][1].getMark() &&
+      board.getBoard()[1][1].getMark() === board.getBoard()[2][0].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("diagonal 1");
+      console.log("diagonal 2");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     }
@@ -191,7 +207,7 @@ const ScreenController = (function() {
     const rowIndex = cell.getAttribute("data-row");
     const columnIndex = cell.getAttribute("data-column");
     console.log(`Cell clicked at row: ${rowIndex} and column: ${columnIndex}`);
-    console.log(game.isTakenCell(rowIndex,columnIndex));
+    //console.log(game.isTakenCell(rowIndex,columnIndex));
     if(!game.isTakenCell(rowIndex,columnIndex)){
       cell.textContent = game.getActiveMark();
       winText = game.playRound(rowIndex, columnIndex);
@@ -211,9 +227,8 @@ const ScreenController = (function() {
     board = new GameLogic();
     playerTurn.textContent = game.getActiveName();
     gameCells.forEach((cell) => {
-      console.log(cell);
       cell.textContent = "";
-      //how do i reset the marks?
+      //the marks arne't resetting properly for some reason :/
     });
   }
 

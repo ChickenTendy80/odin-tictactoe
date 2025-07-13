@@ -216,6 +216,9 @@ const ScreenController = (function() {
     if(game.getGameOver()){
       console.log("END");
       playerTurn.textContent = winText;
+      gameCells.forEach((cell) => {
+        cell.removeEventListener("click", cellClick);
+      });
       return;
     }
 
@@ -228,6 +231,7 @@ const ScreenController = (function() {
     playerTurn.textContent = game.getActiveName();
     gameCells.forEach((cell) => {
       cell.textContent = "";
+      cell.addEventListener("click",cellClick);
       //the marks arne't resetting properly for some reason :/
     });
   }

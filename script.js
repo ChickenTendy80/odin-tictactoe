@@ -20,7 +20,7 @@ function GameBoard(){
       return;
     }
 
-    board[row][column].addMark(mark);
+    return board[row][column].addMark(mark);
   }
 
   return {getBoard, printBoard, selectCell};
@@ -30,7 +30,6 @@ function Cell() {
   let mark = "";
 
   const addMark = (playerMark) => {
-    console.log(playerMark + ": adding mark");
     mark = playerMark;
   }
 
@@ -79,61 +78,61 @@ function GameLogic(
     board.selectCell(row, column, ""+getActivePlayer().mark);
 
     if(
-      board.getBoard()[0][0].getMark() !== "" && board.getBoard()[0][1].getMark() !== "" && board.getBoard()[0][2].getMark() !== "" &&
-      board.getBoard()[0][0].getMark() === board.getBoard()[0][1].getMark() === board.getBoard()[0][2].getMark()
+      getActivePlayer().mark === board.getBoard()[0][0].getMark() === board.getBoard()[0][1].getMark() === board.getBoard()[0][2].getMark()
     ) {
-      console.log(`${getActivePlayer()} won!`);
+      console.log(`${getActivePlayer().name} won!`);
+      console.log("row 1");
       gameOver = true;
     } else if(
-      board.getBoard()[1][0].getMark() !== "" && board.getBoard()[1][1].getMark() !== "" && board.getBoard()[1][2].getMark() !== "" &&
-      board.getBoard()[1][0].getMark() == board.getBoard()[1][1].getMark() == board.getBoard()[1][2].getMark()
+      getActivePlayer().mark === board.getBoard()[1][0].getMark() === board.getBoard()[1][1].getMark() === board.getBoard()[1][2].getMark()
     ) {
-      console.log(`${getActivePlayer()} won!`);
+      console.log(`${getActivePlayer().name} won!`);
+      console.log("row 2");
       gameOver = true;
     } else if(
-      board.getBoard()[2][0].getMark() !== "" && board.getBoard()[2][1].getMark() !== "" && board.getBoard()[2][2].getMark() !== "" &&
-      board.getBoard()[2][0].getMark() == board.getBoard()[2][1].getMark() == board.getBoard()[2][2].getMark()
+      getActivePlayer().mark === board.getBoard()[2][0].getMark() === board.getBoard()[2][1].getMark() === board.getBoard()[2][2].getMark()
     ) {
-      console.log(`${getActivePlayer()} won!`);
+      console.log(`${getActivePlayer().name} won!`);
+      console.log("row 3");
       gameOver = true;
     }
 
     if(
-      board.getBoard()[0][0].getMark() !== "" && board.getBoard()[1][0].getMark() !== "" && board.getBoard()[2][0].getMark() !== "" &&
-      board.getBoard()[0][0].getMark() == board.getBoard()[1][0].getMark() == board.getBoard()[2][0].getMark()
+      getActivePlayer().mark === board.getBoard()[0][0].getMark() === board.getBoard()[1][0].getMark() === board.getBoard()[2][0].getMark()
     ) {
-      console.log(`${getActivePlayer()} won!`);
+      console.log(`${getActivePlayer().name} won!`);
+      console.log("column 1");
       gameOver = true;
     } else if(
-      board.getBoard()[0][1].getMark() !== "" && board.getBoard()[1][1].getMark() !== "" && board.getBoard()[2][1].getMark() !== "" &&
-      board.getBoard()[0][1].getMark() == board.getBoard()[1][1].getMark() == board.getBoard()[2][1].getMark()   
+      getActivePlayer().mark === board.getBoard()[0][1].getMark() === board.getBoard()[1][1].getMark() === board.getBoard()[2][1].getMark()   
     ) {
-      console.log(`${getActivePlayer()} won!`);
+      console.log(`${getActivePlayer().name} won!`);
+      console.log("column 2");
       gameOver = true;
     } else if(
-      board.getBoard()[0][2].getMark() !== "" && board.getBoard()[1][2].getMark() !== "" && board.getBoard()[2][2].getMark() !== "" &&
-      board.getBoard()[0][2].getMark() == board.getBoard()[1][2].getMark() == board.getBoard()[2][2].getMark()
+      getActivePlayer().mark === board.getBoard()[0][2].getMark() === board.getBoard()[1][2].getMark() === board.getBoard()[2][2].getMark()
     ) {
-      console.log(`${getActivePlayer()} won!`);
+      console.log(`${getActivePlayer().name} won!`);
+      console.log("column 3");
       gameOver = true;
     }
 
     if(
-      board.getBoard()[0][0].getMark() !== "" && board.getBoard()[1][1].getMark() !== "" && board.getBoard()[2][2].getMark() !== "" &&
-      board.getBoard()[0][1].getMark() == board.getBoard()[1][1].getMark() == board.getBoard()[2][2].getMark()
+      getActivePlayer().mark === board.getBoard()[0][1].getMark() === board.getBoard()[1][1].getMark() === board.getBoard()[2][2].getMark()
     ) {
-      console.log(`${getActivePlayer()} won!`);
+      console.log(`${getActivePlayer().name} won!`);
+      console.log("diagonal 1");
       gameOver = true;
     } else if(
-      board.getBoard()[0][2].getMark() !== "" && board.getBoard()[1][1].getMark() !== "" && board.getBoard()[2][0].getMark() !== "" &&
-      board.getBoard()[0][2].getMark() == board.getBoard()[1][1].getMark() == board.getBoard()[2][0].getMark()
+      getActivePlayer().mark === board.getBoard()[0][2].getMark() == board.getBoard()[1][1].getMark() === board.getBoard()[2][0].getMark()
     ) {
-      console.log(`${getActivePlayer()} won!`);
+      console.log(`${getActivePlayer().name} won!`);
+      console.log("diagonal 1");
       gameOver = true;
     }
 
     if(board.getBoard().flat().every(element => element.getMark() !== "")){
-      console.log("It's a tie!");
+      console.log(`${getActivePlayer().name} won!`);
       gameOver = true;
     }
 
@@ -150,13 +149,6 @@ function GameLogic(
 const ScreenController = (function() {
   const game = GameLogic();
 
-  game.playRound(1,1);
-  game.playRound(0,0);
-  game.playRound(2,1);
-  game.playRound(1,0);
-  game.playRound(0,1);
-  console.log(game.getGameOver());
-
   const gameCells = document.querySelectorAll(".cell");
   const resetButton = document.querySelector(".restart-btn");
   const playerTurn = document.querySelector(".player-turn");
@@ -166,8 +158,8 @@ const ScreenController = (function() {
     const rowIndex = cell.getAttribute("data-row");
     const columnIndex = cell.getAttribute("data-column");
     console.log(`Cell clicked at row: ${rowIndex} and column: ${columnIndex}`);
-    cell.textContent = game.getActiveMark();
     game.playRound(rowIndex, columnIndex);
+    cell.textContent = game.getActiveMark();
 
     if(game.getGameOver()){
       console.log("END");

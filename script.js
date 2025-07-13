@@ -25,7 +25,7 @@ function GameBoard(){
   };
 
   const selectCell = (row, column, mark) => {
-    console.log("Selected row: " + row + " column: " + column);
+    //console.log("Selected row: " + row + " column: " + column);
     if(board[row][column].getMark() !== ""){
       console.log("Cell is already taken");
       return false;
@@ -87,16 +87,17 @@ function GameLogic(
   
   const printNewRound = () => {
     board.printBoard();
-    console.log(`${getActivePlayer().name}'s turn`);
+    //console.log(`${getActivePlayer().name}'s turn`);
   }
 
   const isTakenCell = (row, column) => {
+    console.log(board.getBoard()[row][column].getMark());
     return board.getBoard()[row][column].getMark() !== "";
   }
 
   const playRound = (row, column) => {
     console.log(`${getActivePlayer().name} placed a ${getActiveMark()} on row ${row} and column ${column}`);
-    console.log(getActiveMark());
+    //console.log(getActiveMark());
     board.selectCell(row, column, getActiveMark());
 
     if(
@@ -105,7 +106,7 @@ function GameLogic(
       board.getBoard()[0][1].getMark() === board.getBoard()[0][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("row 1");
+      //console.log("row 1");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
@@ -114,7 +115,7 @@ function GameLogic(
       board.getBoard()[1][1].getMark() === board.getBoard()[1][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("row 2");
+      //console.log("row 2");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
@@ -123,7 +124,7 @@ function GameLogic(
       board.getBoard()[2][1].getMark() === board.getBoard()[2][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("row 3");
+      //console.log("row 3");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     }
@@ -134,7 +135,7 @@ function GameLogic(
       board.getBoard()[1][0].getMark() === board.getBoard()[2][0].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("column 1");
+      //console.log("column 1");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
@@ -143,7 +144,7 @@ function GameLogic(
       board.getBoard()[1][1].getMark() === board.getBoard()[2][1].getMark()   
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("column 2");
+      //console.log("column 2");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
@@ -152,7 +153,7 @@ function GameLogic(
       board.getBoard()[1][2].getMark() === board.getBoard()[2][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("column 3");
+      //console.log("column 3");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     }
@@ -163,7 +164,7 @@ function GameLogic(
       board.getBoard()[1][1].getMark() === board.getBoard()[2][2].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("diagonal 1");
+      //console.log("diagonal 1");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     } else if(
@@ -172,7 +173,7 @@ function GameLogic(
       board.getBoard()[1][1].getMark() === board.getBoard()[2][0].getMark()
     ) {
       console.log(`${getActivePlayer().name} won!`);
-      console.log("diagonal 2");
+      //console.log("diagonal 2");
       gameOver = true;
       return `${getActivePlayer().name} won!`;
     }
@@ -194,7 +195,7 @@ function GameLogic(
 
 //UI----------------------------------------------------------------------------------------------------------------------------------------
 const ScreenController = (function() {
-  const game = GameLogic();
+  let game = GameLogic();
 
   const gameCells = document.querySelectorAll(".cell");
   const resetButton = document.querySelector(".restart-btn");
@@ -227,7 +228,7 @@ const ScreenController = (function() {
 
   const restartGame = () => {
     console.log("Resetted");
-    board = new GameLogic();
+    game = new GameLogic();
     playerTurn.textContent = game.getActiveName();
     gameCells.forEach((cell) => {
       cell.textContent = "";
